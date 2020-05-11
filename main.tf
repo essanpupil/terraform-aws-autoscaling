@@ -28,7 +28,8 @@ module "asg_name" {
 resource "aws_launch_template" "main" {
   name = "${module.launch_template_name.name}"
 
-  image_id = "${data.aws_ami.latest_service_image.id}"
+  image_id      = "${data.aws_ami.latest_service_image.id}"
+  instance_type = "${var.instance_type}"
 
   iam_instance_profile {
     name = "${var.instance_profile_name}"
@@ -59,7 +60,7 @@ resource "aws_launch_template" "main" {
       volume_size           = "${var.volume_size}"
       volume_type           = "${var.volume_type}"
       delete_on_termination = "${var.delete_on_termination}"
-      encrypted            = "${var.ebs_encryption}"
+      encrypted             = "${var.ebs_encryption}"
     }
   }
 
@@ -111,19 +112,9 @@ resource "aws_autoscaling_group" "main" {
   load_balancers            = ["${var.asg_clb_names}"]
   termination_policies      = ["${var.asg_termination_policies}"]
 
-  mixed_instances_policy {
-    launch_template {
-      launch_template_specification {
-        launch_template_id = "${aws_launch_template.main.id}"
-        version            = "$Latest"
-      }
-
-      override = [
-        "${var.launch_template_overrides}",
-      ]
-    }
-
-    instances_distribution = ["${var.mixed_instances_distribution}"]
+  launch_template {
+    id      = "${aws_launch_template.main.id}"
+    version = "$Latest"
   }
 
   tags = [

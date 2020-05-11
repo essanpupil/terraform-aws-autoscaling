@@ -1,6 +1,5 @@
 module "asg" {
-  source = "../../"
-
+  source              = "../../"
   service_name        = "paybe"
   environment         = "staging"
   product_domain      = "pay"
@@ -33,10 +32,7 @@ module "asg" {
 
   launch_template_overrides = [
     {
-      "instance_type" = "t2.large"
-    },
-    {
-      "instance_type" = "t3.large"
+      "instance_type" = "c4.large"
     },
   ]
 }

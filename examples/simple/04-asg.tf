@@ -1,5 +1,5 @@
 module "asg" {
-  source = "../../"
+  source              = "../../"
   service_name        = "fprbe"
   environment         = "staging"
   product_domain      = "fpr"
@@ -31,13 +31,4 @@ module "asg" {
   asg_lb_target_group_arns = []
 
   asg_wait_for_capacity_timeout = "1m"
-
-  launch_template_overrides = [
-    {
-      "instance_type" = "t2.large"
-    },
-    {
-      "instance_type" = "t3.large"
-    },
-  ]
 }

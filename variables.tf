@@ -138,19 +138,10 @@ variable "asg_wait_for_elb_capacity" {
   description = "Terraform will wait for exactly this number of healthy instances in all attached load balancers on both create and update operations. If left to default, the value is set to asg_min_capacity"
 }
 
-variable "launch_template_overrides" {
-  type = "list"
-
-  default = [
-    {
-      "instance_type" = "c5.large"
-    },
-    {
-      "instance_type" = "c4.large"
-    },
-  ]
-
-  description = "List of nested arguments provides the ability to specify multiple instance types. See https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html#override"
+variable "instance_type" {
+  type        = "string"
+  default     = "t3.medium"
+  description = "The instance type for the launch template"
 }
 
 variable "security_groups" {
@@ -228,18 +219,4 @@ variable "ebs_encryption" {
 variable "associate_public_ip" {
   description = "Whether to associate public IP to the instance"
   default     = "false"
-}
-
-variable "mixed_instances_distribution" {
-  type        = "map"
-  description = "Specify the distribution of on-demand instances and spot instances. See https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_InstancesDistribution.html"
-
-  default = {
-    on_demand_allocation_strategy            = "prioritized"
-    on_demand_base_capacity                  = "0"
-    on_demand_percentage_above_base_capacity = "100"
-    spot_allocation_strategy                 = "lowest-price"
-    spot_instance_pools                      = "2"
-    spot_max_price                           = ""
-  }
 }
