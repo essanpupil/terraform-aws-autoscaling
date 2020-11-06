@@ -3,6 +3,13 @@ locals {
   asg_wait_for_elb_capacity = "${var.asg_wait_for_elb_capacity == "" ? var.asg_min_capacity : var.asg_wait_for_elb_capacity}"
 }
 
+module "random_asg" {
+  source = "github.com/traveloka/terraform-aws-resource-naming.git?ref=v0.18.1"
+
+  name_prefix   = "${var.service_name}-${var.cluster_role}"
+  resource_type = "autoscaling_group"
+}
+
 module "random_lc" {
   source = "github.com/traveloka/terraform-aws-resource-naming.git?ref=v0.6.0"
 
@@ -44,7 +51,7 @@ resource "aws_launch_configuration" "main" {
 }
 
 resource "aws_autoscaling_group" "main" {
-  name                      = "${aws_launch_configuration.main.name}"
+  name                      = "${module.random_asg.name}"
   max_size                  = "${var.asg_max_capacity}"
   min_size                  = "${var.asg_min_capacity}"
   default_cooldown          = "${var.asg_default_cooldown}"
